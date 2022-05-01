@@ -30,7 +30,9 @@ fetch(url)
 function filterYears(rawData) {
   let parseDate = d3.timeParse("%Y-%m-%d");
 
-  xValues = Object.values(rawData).map((array) => parseDate(array[0]));
+  xValues = Object.values(rawData).map((array) =>
+    console.log(parseDate(array[0]))
+  );
   yValues = Object.values(rawData).map((array) => array[1]);
   dataset = rawData;
 }
