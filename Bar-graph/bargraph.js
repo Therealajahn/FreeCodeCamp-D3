@@ -21,42 +21,38 @@ const url =
 fetch(url)
   .then((response) => response.json())
   .then((json) => {
-    filterYears(json["data"]);
+    createDataArrays(json["data"]);
     createScales();
     createAxes();
     createBars();
   });
 
-function filterYears(rawData) {
-  let parseDate = d3.timeParse("%Y-%m-%d");
-
-  xValues = Object.values(rawData).map((array) =>
-    console.log(parseDate(array[0]))
-  );
+function createDataArrays(rawData) {
+  xValues = Object.values(rawData).map((array) => new Date(array[0]));
   yValues = Object.values(rawData).map((array) => array[1]);
-  dataset = rawData;
+
+  dataset = Object.values(rawData).map((array) => ({
+    timeConverted: new Date(array[0]),
+    time: array[0],
+    gdp: array[1],
+  }));
 }
 
-function createScales(dataset) {
+function createScales() {
   let xMin = d3.min(xValues);
   let xMax = d3.max(xValues);
 
+  console.table(`xmin:${xMin} xmax:${xMax}`);
+
   xScale = d3
     .scaleTime()
-    .domain([xMin, xMax + 5])
+    .domain([xMin, xMax])
     .range([padding, w - padding]);
 
   let yMin = d3.min(yValues);
-  let yMax = d3.max(yValues);
+  let yMax = d3.max(yValues) + 1500;
 
-  yScale = d3
-    .scaleLinear()
-    .domain([0, yMax + 1500])
-    .range([0, h]);
-  yAxisScale = d3
-    .scaleLinear()
-    .domain([yMax + 1500, yMin - 100])
-    .range([0, h]);
+  yScale = d3.scaleLinear().domain([0, yMax]).range([h, 0]);
 }
 
 function createAxes() {
@@ -65,30 +61,60 @@ function createAxes() {
     .append("g")
     .attr("id", "x-axis")
     .attr("transform", `translate(0, ${h - padding})`)
-    .call(xAxis);
+    .call(xAxis)
+    .selectAll("*")
+    .attr("class", "tick");
 
-  let yAxis = d3.axisLeft(yAxisScale).ticks(10);
+  let yAxis = d3.axisLeft(yScale).ticks(10);
   title
     .append("g")
     .attr("id", "y-axis")
-    .attr("transform", `translate(${padding},0)`)
+    .attr("transform", `translate(${padding},-${padding})`)
     .call(yAxis)
     .selectAll("*")
     .attr("class", "tick");
 }
 
 function createBars() {
+  // let tooltip = title
+  //   .append("div")
+  //   .style("position", "absolute")
+  //   .style("width", "10px")
+  //   .style("height", "20px")
+  //   .style("background-color", "#9cccff")
+  //   .style("border", "2px solid #5d7794")
+  //   .style("visibility", "visible");
+
+  let tooltip = d3
+    .select("#huh")
+    .style("position", "absolute")
+    .style("visibility", "visible");
+
   title
     .selectAll("rect")
     .data(dataset)
     .enter()
     .append("rect")
     .attr("class", "bar")
-    .attr("data-date", (d) => d[0])
-    .attr("data-gdp", (d) => d[1])
-    .attr("x", (d) => xScale(d[0].match(/^\w+/)))
-    .attr("y", (d) => h - padding - yScale(d[1]))
-    .attr("height", (d) => yScale(d[1]))
+    .attr("data-date", (d) => d.time)
+    .attr("data-gdp", (d) => d.gdp)
+    .attr("x", (d) => xScale(d.timeConverted))
+    .attr("y", (d) => h - padding - (h - yScale(d.gdp)))
+    .attr("height", (d) => h - yScale(d.gdp))
     .attr("width", 5)
-    .attr("fill", "blue").attr;
+    .attr("fill", "blue")
+    .on("mouseover", () => {
+      console.log("over");
+      return tooltip.style("visibilty", "visible");
+    }) //make tooltip visible
+    .on("mousemove", (e) =>
+      tooltip
+        .style("margin-left", `${e.pageX - 100}px`)
+        .style("margin-top", `${100}px`)
+    ) //get location of mouse to decide position of tooltip
+    .on("mouseout", () => {
+      console.log("out");
+      console.log(document.querySelector("#huh").style);
+      return tooltip.style("visibility", "hidden");
+    });
 }
