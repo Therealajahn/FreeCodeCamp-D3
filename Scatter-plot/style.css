@@ -4,6 +4,9 @@ body {
   align-items: center;
   background-color: #d0ffc6;
   font-family: monospace;
+  padding: 0;
+  margin: 0;
+  /* overflow: hidden; */
 }
 /* #ffb592
 #ffec92
@@ -13,21 +16,30 @@ body {
 #92ffec */
 
 #graph {
+  width: 80vw;
+  height: 100vh;
   display: grid;
   justify-items: center;
   background-color: #dfeeeb;
-  box-shadow: 0px 0px 20px -15px;
+  box-shadow: 0px 0px 25px -10px;
 }
 
 header {
-  width: 80vw;
+  width: 100%;
   display: grid;
   justify-items: center;
 }
 
 #canvas {
   width: 70vw;
+  height: 60vh;
   background-color: #dfeeeb;
   border: 2px solid black;
   box-shadow: 0px 0px 20px -10px;
+}
+
+#legend {
+  width: 20vw;
+  height: 10vh;
+  border: 2px solid black;
 }
