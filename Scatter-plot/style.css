@@ -1,3 +1,33 @@
 body {
-  background-color: #df4828;
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  background-color: #d0ffc6;
+  font-family: monospace;
+}
+/* #ffb592
+#ffec92
+#dcff92
+#a5ff92
+#92ffb5
+#92ffec */
+
+#graph {
+  display: grid;
+  justify-items: center;
+  background-color: #dfeeeb;
+  box-shadow: 0px 0px 20px -15px;
+}
+
+header {
+  width: 80vw;
+  display: grid;
+  justify-items: center;
+}
+
+#canvas {
+  width: 70vw;
+  background-color: #dfeeeb;
+  border: 2px solid black;
+  box-shadow: 0px 0px 20px -10px;
 }

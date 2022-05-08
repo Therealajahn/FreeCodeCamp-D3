@@ -1,9 +1,15 @@
+let margin = { top: 20, left: 10, right: 10, bottom: 10 };
+let width = 1100;
+let height = 550;
+
 //prettier-ignore
 
 const canvas = d3
-.select("body")
+.select("#graph")
 .append("svg")
-.attr("id", "canvas");
+.attr("id", "canvas")
+.attr("width",`${width}`)
+.attr("height",`${height}`);
 
 //prettier-ignore
 
