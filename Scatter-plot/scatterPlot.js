@@ -1,5 +1,5 @@
 let padding = 40;
-let radius = 5;
+let radius = 6;
 let width = 1100 - padding * 2;
 let height = 500 - padding * 2;
 let data = [];
@@ -9,12 +9,12 @@ let fastestTimes;
 
 //prettier-ignore
 
-const canvas = d3
-.select("#graph")
-.append("svg")
-.attr("id", "canvas")
-.attr("width",`${width}`)
-.attr("height",`${height}`);
+const canvas =  d3
+.select("#canvas-wrapper")
+  .append("svg")
+  .attr("id", "canvas")
+  .attr("width", `${width}`)
+  .attr("height", `${height}`);
 
 //prettier-ignore
 const title = 
@@ -89,9 +89,38 @@ function createDots() {
     .attr("data-yvalue", (d, i) => fastestTimes[i])
     .attr("cx", (d) => xScale(d.Year))
     .attr("cy", (d, i) => yScale(fastestTimes[i]))
+    .attr("fill", (d) => (d.Doping ? "red" : "blue"))
+    .attr("opacity", 0.7)
+    .attr("stroke", "black")
+    .attr("stroke-width", 2)
     .attr("r", radius);
 }
 
 function createLegend() {
-  let legend = canvas.append("div").attr("id", "legend");
+  let legend = d3
+    .select("#canvas-overlay")
+    .append("div")
+    .attr("id", "legend")
+    .style("width", "150px")
+    .style("height", "80px")
+    .style("border-radius", "4px")
+    .style("background-color", "#fff")
+    .style("display", "grid")
+    .style("grid", "1fr 1fr / 1fr 2fr")
+    .style("align-items", "center");
+
+  function line(color, id, text) {
+    let height = 20;
+
+    legend
+      .append("div")
+      .style("width", `${height}px`)
+      .style("height", `${height}px`)
+      .style("background-color", `${color}`)
+      .style("margin-left", "5px");
+
+    legend.append("p").html(`${text}`);
+  }
+  line("red", "accused", "Accused of doping");
+  line("blue", "not-accused", "Not Accused of Doping");
 }

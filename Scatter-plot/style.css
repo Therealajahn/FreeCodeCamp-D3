@@ -33,13 +33,16 @@ header {
 #canvas {
   width: 70vw;
   height: 60vh;
-  background-color: #dfeeeb;
+  background-color: #ffffff;
   border: 2px solid black;
-  box-shadow: 0px 0px 20px -10px;
+  box-shadow: inset 0px 0px 20px -10px;
 }
 
-#legend {
-  width: 20vw;
-  height: 10vh;
-  border: 2px solid black;
+#canvas-overlay {
+  position: absolute;
+  width: 70vw;
+  height: 60vh;
+  display: grid;
+  justify-items: right;
+  align-items: center;
 }
