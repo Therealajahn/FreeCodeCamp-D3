@@ -6,11 +6,17 @@ let data = [];
 let xScale;
 let yScale;
 let fastestTimes;
+let tooltip;
 
 //prettier-ignore
 
-const canvas =  d3
-.select("#canvas-wrapper")
+const canvasOverlay = d3
+  .select("#canvas-wrapper")
+  .append("div")
+  .attr("id", "canvas-overlay")
+
+const canvas = d3
+  .select("#canvas-wrapper")
   .append("svg")
   .attr("id", "canvas")
   .attr("width", `${width}`)
@@ -34,6 +40,7 @@ fetch(url)
     data = json;
     filterData(json);
     createAxes();
+    createToolTips();
     createDots();
     createLegend();
   });
@@ -77,6 +84,20 @@ function createAxes() {
     .call(yAxis);
 }
 
+function createToolTips() {
+  tooltip = d3
+    .select("#canvas-overlay")
+    .append("div")
+    .attr("id", "tooltip")
+    .style("position", "absolute")
+    .style("width", "120px")
+    .style("min-height", "10px")
+    .style("padding", "5px")
+    .style("background-color", "#9cccff")
+    .style("border", "2px solid #5d7794")
+    .style("opacity", "0");
+}
+
 function createDots() {
   // data-xvalue" and "data-yvalue
   const dots = canvas
@@ -93,7 +114,24 @@ function createDots() {
     .attr("opacity", 0.7)
     .attr("stroke", "black")
     .attr("stroke-width", 2)
-    .attr("r", radius);
+    .attr("r", radius)
+    .on("mouseover", (e, d) => {
+      return tooltip
+        .transition()
+        .duration(200)
+        .style("opacity", "1")
+        .attr("data-year", `${d.Year}`)
+        .text(`${d.Doping}`);
+    }) //make tooltip visible
+    .on("mousemove", (e) => {
+      tooltip
+        .style("margin-left", `${e.pageX - 150}px`)
+        .style("margin-top", `${e.pageY - 200}px`);
+      // .text(`${xValues[i]}`);
+    }) //get location of mouse to decide position of tooltip
+    .on("mouseout", () => {
+      return tooltip.transition().duration(200).style("opacity", "0");
+    });
 }
 
 function createLegend() {
@@ -104,10 +142,11 @@ function createLegend() {
     .style("width", "150px")
     .style("height", "80px")
     .style("border-radius", "4px")
-    .style("background-color", "#fff")
+    // .style("background-color", "#fff")
     .style("display", "grid")
     .style("grid", "1fr 1fr / 1fr 2fr")
-    .style("align-items", "center");
+    .style("align-items", "center")
+    .style("justify-self", "right");
 
   function line(color, id, text) {
     let height = 20;

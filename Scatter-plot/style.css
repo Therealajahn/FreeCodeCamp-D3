@@ -43,6 +43,6 @@ header {
   width: 70vw;
   height: 60vh;
   display: grid;
-  justify-items: right;
-  align-items: center;
+  pointer-events: none;
+  /* background-color: #fff; */
 }
