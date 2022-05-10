@@ -1,0 +1,15 @@
+#description {
+  width: 100%;
+  display: grid;
+  justify-items: center;
+}
+
+#canvas-wrapper {
+  width: 100%;
+  display: grid;
+  justify-items: center;
+}
+
+#canvas {
+  border: 2px solid #000;
+}
