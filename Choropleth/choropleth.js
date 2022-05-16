@@ -27,7 +27,8 @@ const pathGenerator = d3.geoPath();
 async function applyData() {
   const education = await d3.json(educationFile);
   const map = await d3.json(mapFile);
-  console.log(education);
+  // console.log(education);
+  // console.log(map);
   let colorScale = createColorScale(education);
   let tooltip = createToolTip();
   createCountyPaths(map, education, colorScale, tooltip);
@@ -43,13 +44,12 @@ function createColorScale(education) {
   // let array = [];
   // for (
   //   let i = d3.min(bachelorsList);
-  //   i < d3.max(bachelorsList);
+  //   i <= d3.max(bachelorsList);
   //   i += (d3.max(bachelorsList) - d3.min(bachelorsList)) / 10
   // ) {
   //   array.push(i);
   // }
   //generate values for legend
-  console.log(d3.extent(bachelorsList));
 
   return (amountEducated) =>
     d3.interpolateSpectral(
@@ -77,6 +77,8 @@ function createToolTip() {
 }
 
 function createCountyPaths(map, education, colorScale, tooltip) {
+  const getCounty = (d) => education.filter((county) => county.fips === d.id);
+
   canvas
     .append("g")
     .attr("id", "map")
@@ -86,20 +88,22 @@ function createCountyPaths(map, education, colorScale, tooltip) {
     .join("path")
     .attr("d", pathGenerator)
     .attr("class", "county")
-    .attr("data-fips", (d, i) => education[i].fips)
-    .attr("data-education", (d, i) => education[i].bachelorsOrHigher)
+    // .attr("huh", (d) => console.log(d))
+    .attr("data-fips", (d) => getCounty(d)[0].fips)
+    .attr("data-education", (d) => getCounty(d)[0].bachelorsOrHigher)
     .attr("fill", (d, i) => colorScale(education[i].bachelorsOrHigher))
-    .attr("i", (d, i) => i)
+    .attr("datum", (d) => d)
 
     .on("mouseover", (e, d) => {
-      let i = e.target.getAttribute("i");
       e.target.setAttribute("stroke", "black");
       tooltip
         .style("opacity", "0.9")
         .html(
-          `${education[i].area_name},${education[i].state}: ${education[i].bachelorsOrHigher}%`
+          `${getCounty(d)[0].area_name},${getCounty(d)[0].state}: ${
+            getCounty(d)[0].bachelorsOrHigher
+          }%`
         )
-        .attr("data-education", education[i].bachelorsOrHigher);
+        .attr("data-education", getCounty(d)[0].bachelorsOrHigher);
     })
     .on("mousemove", (e) => {
       tooltip
