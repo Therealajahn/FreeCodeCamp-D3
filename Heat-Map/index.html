@@ -6,11 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" type="text/css" href="style.css" />
     <title id="title">Heat Map</title>
-    <style>
-      body {
-        font-family: monospace;
-      }
-    </style>
   </head>
   <body>
     <div id="graph">
@@ -20,6 +15,13 @@
       </header>
       <section id="canvas-wrapper"></section>
     </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/d3-geomap@3.3.0/dist/d3-geomap.min.js"
+      async
+      defer
+    ></script>
+    <script src="https://d3js.org/d3.v7.min.js" async defer></script>
     <script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="heatMap.js"></script>
